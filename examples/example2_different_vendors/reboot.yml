@@ -1,0 +1,27 @@
+---
+- name: Reboot managed nodes
+  hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Starting reboot of VyOS node
+      vyos_command:
+        commands:
+          - 'reboot now'
+      when: "ansible_network_os == 'vyos'"
+      ignore_errors: yes
+
+    - name: Wait until node is up again
+      wait_for_connection:
+        delay: 30
+        sleep: 3
+        timeout: 300
+
+##Doesn't seem to work for emulated devices as config-register cannot be set to 0x2102 (seems to be always 0x0 !?!?)
+##    - name: Reload Cisco IOS devices in 1 minute
+##      ios_command:
+##        commands:
+##          - "reload in 1\ny"
+##        provider: "{{ cli }}"
+##      when: "ansible_network_os == 'ios'"
+

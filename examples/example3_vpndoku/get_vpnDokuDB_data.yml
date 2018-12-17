@@ -1,0 +1,102 @@
+---
+
+## Playbook to get basic- and network data stored in VPN-Doku-DB for a certain VPN.
+## To do this the playboook makes REST API calls.
+## The results are stored as variables.
+##
+## Preconditions
+## -- variable "vpn_name" is defined somewhere else, as extra variable for example
+#        ansible-playbook get_vpnDokuDB_data.yml --extra-vars 'vpn_name=test1'
+
+
+## call this playbook like this: ansible-playbook get_vpnDokuDB_data.yml --extra-vars 'vpn_name=test1'
+
+- name: get basic- and network data stored in VPN-Doku-DB
+  gather_facts: no
+  hosts: localhost
+  vars:
+    # Default vpn_name. Will be overwritten by extra variable.
+    vpn_name: 'undefined'
+    # Information to access VPN-Doku-DB in DB Systel Lab Environment
+    #"vpn_doku_db": {
+    #  "description": "VPN-Doku-DB Lab Server",
+    #  "base_url": "https://ffmvsipam1.lanbf.db.de",
+    #  "verify_sever": False,
+    #  "user": "nso_poc",
+    #  "pwd": "yiavizzTwZgh"
+    #}
+    # Information to access a mockup VPN-Doku-DB
+    "vpn_doku_db": {
+      "description": "Postman Mock VPN-Doku-DB Server",
+      "base_url": "https://6f1fcdb5-858d-4e47-8717-1184aaa5c191.mock.pstmn.io",
+      "verify_sever": True,
+      "user": "unknown",
+      "pwd": "unbekannt"
+    }
+
+  tasks:
+    - name: show variable vpn_name
+      debug: var=vpn_name
+      delegate_to: localhost
+
+    - name: Get basic data from VPN-Doku-DB
+      uri:
+        url: "{{vpn_doku_db.base_url}}/api/v0/vpn/name/{{vpn_name}}"
+        method: GET
+        headers: {
+          'Accept': 'application/json'
+        }
+        user: "{{vpn_doku_db.user}}"
+        password: "{{vpn_doku_db.pwd}}"
+        validate_certs: "{{vpn_doku_db.verify_sever}}"
+      register: get_vpn_basic_data_result
+      delegate_to: localhost
+      failed_when: get_vpn_basic_data_result.status != 200
+
+    - name: show variable get_vpn_basic_data_result
+      debug:
+        var: get_vpn_basic_data_result
+        verbosity: 1
+      delegate_to: localhost
+
+    - name: Store some basic VPN-Doku-DB data as variables for further usage
+      set_fact:
+        vlan_id: "{{get_vpn_basic_data_result.json[0].id}}"
+        vlan_id_usernet: "{{get_vpn_basic_data_result.json[0].vlan_user}}"
+        rt: "{{get_vpn_basic_data_result.json[0].rdrt.split(':')[1]}}"
+      when: get_vpn_basic_data_result is succeeded
+
+    - name: Get network data from VPN-Doku-DB
+      uri:
+        url: "{{vpn_doku_db.base_url}}/api/v0/netzbereich/vpn/name/{{vpn_name}}"
+        method: GET
+        headers: {
+          'Accept': 'application/json'
+        }
+        user: "{{vpn_doku_db.user}}"
+        password: "{{vpn_doku_db.pwd}}"
+        validate_certs: "{{vpn_doku_db.verify_sever}}"
+      register: get_vpn_network_data_result
+      delegate_to: localhost
+      failed_when: get_vpn_network_data_result.status != 200
+
+    - name: show variable get_vpn_network_data_result
+      debug:
+        var: get_vpn_network_data_result
+        verbosity: 1
+      delegate_to: localhost
+
+    - name: Store VPN network data obtained from VPN-Doku-DB as variable for further usage
+      set_fact:
+        vpn_network_list: "{{get_vpn_network_data_result.json}}"
+      when: get_vpn_network_data_result is succeeded
+
+    - name: Show stored basic VPN data values
+      debug:
+        msg: "vlan_id = {{vlan_id}}, vlan_id_usernet = {{vlan_id_usernet}}, rt = {{rt}}"
+        verbosity: 0
+
+    - name: Show stored VPN network list
+      debug:
+        var: vpn_network_list
+        verbosity: 0

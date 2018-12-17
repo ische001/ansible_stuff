@@ -1,0 +1,45 @@
+Example0 does not consist of any Ansible playbooks.
+Rather it contains this file, in which some examples of Ad-Hoc Ansible commands are provided for you to play around with.
+
+Please also see: https://docs.ansible.com/ansible/latest/user_guide/intro_adhoc.html for details.
+
+OK, here we go then:
+
+General Syntax for ansible adhoc commands:
+------------------------------------------
+
+ansible <hosts> [-m <module_name>] -a <"arguments"> -u <username> [--become]
+
+Hosts: It can be any entry in the inventory file. For specifying all hosts in inventory, use all or '*'. Wild card patterns are also accepted.
+
+module_name: It's an optional parameter. There are hundreds of modules available in Ansible. By default it is command. For example shell, copy, yum, apt, file.
+
+Arguments: We should pass values that are required by the module. It may change according to the module used.
+
+Username: It specifies the user account in which Ansible can execute commands. User account, SSH.
+
+Become: It's an optional parameter specified when we want to execute operations that need sudo privilege. By default become is false.
+
+If you put a -c option, then Ansible will do a dry run of the command. It will not actually be applied on the nodes.
+
+
+Examples:
+---------
+
+Ping all the devices in the network:
+------------------------------------
+ansible all -i hosts -m ping (make sure there is a valid hosts file in the directory from which you are issuing this command)
+
+Display gathered facts from the IOS devices:
+--------------------------------------------
+ansible *_ios -i hosts -m ios_facts | less
+ansible R4-vyos -i hosts -m vyos_facts | less
+
+Do an adhoc "show version" on one of the IOS routers:
+-----------------------------------------------------
+ansible R3_ios -i hosts -m ios_command -a "commands='show version'"
+
+Or show the CDP neighbors:
+--------------------------
+ansible R1_ios -i hosts -m ios_command -a "commands='show cdp neighbors'"
+

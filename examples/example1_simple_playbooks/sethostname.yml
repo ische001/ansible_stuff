@@ -1,0 +1,31 @@
+---
+## call the playbook like this: ansible-playbook -i hosts sethostname.yml
+- name: Set Hostname of Cisco IOS Router
+  hosts: R3_ios ##limited to R3_ios
+  gather_facts: no
+  vars:
+    new_hostname: R3_ios
+
+  tasks:
+    - name: gather facts from device
+      ios_facts:
+        gather_subset: all
+
+    - name: Output current hostname before change
+      debug:
+        msg: "Hostname from gathered facts: {{ansible_net_hostname}}"
+
+    - name: set the hostname
+      ios_system:
+        hostname: "{{new_hostname}}"
+
+    - name: gather facts again from device
+      ios_facts:
+        gather_subset: all
+
+    - name: Output current hostname after change
+      debug:
+        msg: "New hostname from gathered facts: {{ansible_net_hostname}}"
+
+
+

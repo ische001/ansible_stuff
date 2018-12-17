@@ -1,0 +1,29 @@
+The AWX/Tower REST API is easily accesible.
+Just go to the following URL:
+
+http://localhost/api/login
+
+Here you log in using the credentials: admin/password
+
+And now you can select the most current API version by clicking on it:
+
+http://localhost/api/v2/
+
+Here you can now explore the AWY/Tower API by yourself. You can basically do everything you could do from the AWX/Tower API.
+
+So why not try to start a playbook for instance.
+You should know how to run playbooks from the AWX/Tower GUI before you attempt to do it from here.
+
+You could try to run the hello_world playbook for a start:
+
+Go to:
+
+http://localhost/api/v2/job_templates/5/launch/ 
+
+and hit the POST button at the bottom of the page.
+
+This should trigger a run of the hello_world playbook. Note that the number 5 in the above URL is the internal ID of the job template we are trying to run.
+This ID may differ in your personal setup. 
+
+Play around with the API a little bit to make yourself familiar with how to run playbooks etc.
+

@@ -1,0 +1,14 @@
+---
+## call the playbook like this: ansible-playbook -i hosts shutdown.yml
+## This will only shutdown the vyOS device as there is no shutdown command for Cisco IOS devices
+- name: Halt managed nodes
+  hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Power off VyOS node
+      vyos_command:
+        commands:
+          - 'poweroff now'
+      when: "ansible_network_os == 'vyos'"
+      ignore_errors: yes

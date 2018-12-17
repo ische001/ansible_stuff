@@ -1,0 +1,23 @@
+---
+
+## Examples how to invoke this playbook:
+## -------------------------------------
+## ansible-playbook -i hosts getversion.yml (uses hosts files in this directory, will fails for vyOS device)
+## ansible-playbook -i hosts -l R3_* getversion.yml (applies only to R3_ios from hosts file)
+## ansible-playbook -i hosts -l *ios getversion.yml (applies to all IOS Routers in hosts file)
+## ansible-playbook -i hosts -l R[12]_* getversion.yml (applies to R1_ios and R2_ios from hosts file)
+
+- name: Issue 'show version' command to Cisco IOS Router and print info
+  gather_facts: no
+  hosts: all
+  tasks:
+
+    - name: send show commands ('show version') to IOS device
+      ios_command:
+        commands:
+          - show version | include Version
+      register: version 
+
+    - name: Output the version info from step before
+      debug:
+        msg: "The Router {{inventory_hostname}} provided the following version Info: {{version.stdout_lines[0][0]}}"
