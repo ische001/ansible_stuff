@@ -2,10 +2,18 @@
 # tasks file for ./roles/get_VpnDokuDB_info
 
 - name: Show name of VPN
+  delegate_to: localhost
+  run_once: true
   debug:
     var: vpn_name
     verbosity: 1
+
+- name: Show access info of VPN-Doku-DB
   delegate_to: localhost
+  run_once: true
+  debug:
+    var: vpn_doku_db
+    verbosity: 1
 
 - name: Get basic data from VPN-Doku-DB
   delegate_to: localhost
