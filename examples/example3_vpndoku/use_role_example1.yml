@@ -1,0 +1,35 @@
+---
+
+##
+## Example Playbook showing how to use role 'get_VpnDokuDB_info'.
+##
+
+- name: "Get and use VPN information in one play"
+  gather_facts: no
+  hosts:
+    - "*1*"
+    - "*2*"
+  ignore_unreachable: true
+  vars_prompt:
+    - name: "vpn_name"
+      prompt: "Enter the name of the VPN"
+      private: no
+    - name: "dummy"
+      prompt: "Just an example, enter any value"
+      private: no
+      default: "abcdefghijklmnopqrstuvwxyz"
+
+  tasks:
+    - name: "Show defined host variables BEFORE executing role"
+      debug:
+        var: hostvars['{{inventory_hostname}}']
+
+    - name: "Get VPN information from VPN-Doku-DB" 
+      include_role:
+        name: get_VpnDokuDB_info
+      any_errors_fatal: true
+
+    - name: "Show defined host variables AFTER executing role"
+      debug:
+        var: hostvars['{{inventory_hostname}}']
+

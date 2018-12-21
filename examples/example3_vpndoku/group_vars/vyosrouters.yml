@@ -1,0 +1,8 @@
+---
+# Group variables of Group vyosrouters
+#
+ansible_user: vyos
+ansible_connection: network_cli
+ansible_ssh_private_key_file: /home/workshop/.ssh/id_rsa
+ansible_network_os: vyos
+...

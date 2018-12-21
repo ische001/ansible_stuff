@@ -1,0 +1,24 @@
+# Example inventory file
+# Host- an group variables are defined in separate files
+# in directories host_vars and group_vars respectively.
+#
+# Thus this inventory file only defines group membership.
+#
+
+[iosrouters]
+R1_ios
+R2_ios
+R3_ios
+
+[vyosrouters]
+R4-vyos
+
+[pe_routers]
+R1_ios
+
+[ce_routers]
+R2_ios
+
+[cr_routers]
+R3_ios
+

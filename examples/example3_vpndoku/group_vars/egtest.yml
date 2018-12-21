@@ -1,0 +1,9 @@
+---
+# Group variables of group egtest
+#
+ansible_connection: network_cli
+ansible_network_os: vyos
+ansible_user: devoteam
+ansible_ssh_private_key_file: >-
+  /home/workshop/.ssh/devo
+...

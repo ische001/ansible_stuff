@@ -1,0 +1,8 @@
+---
+# defaults file for ./roles/get_VpnDokuDB_info
+
+# Directories 'vars' and 'defaults' both house variables, but variables
+# in 'vars' have a higher priority, which means that they are more
+# difficult to override.
+# Variables in 'defaults' have the lowest priority of any variables
+# available, which means they’re easy to override.

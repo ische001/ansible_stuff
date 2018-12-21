@@ -1,0 +1,4 @@
+---
+# Host variables of router R4-vyos
+ansible_host: 192.168.5.1
+...

@@ -1,0 +1,5 @@
+---
+# Host variables of R3_ios
+#
+ansible_host: 192.168.4.1
+...

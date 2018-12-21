@@ -1,0 +1,51 @@
+---
+# tasks file for ./roles/get_VpnDokuDB_info
+
+- name: Show name of VPN
+  debug:
+    var: vpn_name
+    verbosity: 1
+  delegate_to: localhost
+
+- name: Get basic data from VPN-Doku-DB
+  delegate_to: localhost
+  run_once: true
+  uri:
+    url: "{{vpn_doku_db.base_url}}/api/v0/vpn/name/{{vpn_name}}"
+    method: GET
+    headers: {
+      'Accept': 'application/json'
+    }
+    user: "{{vpn_doku_db.user}}"
+    password: "{{vpn_doku_db.pwd}}"
+    validate_certs: "{{vpn_doku_db.verify_server}}"
+  register: get_vpn_basic_data_result
+  failed_when: get_vpn_basic_data_result.status != 200
+
+- name: Store some basic VPN-Doku-DB data as variables for further usage
+  set_fact:
+    vpn_name: "{{vpn_name}}"
+    vlan_id: "{{get_vpn_basic_data_result.json[0].id}}"
+    vlan_id_usernet: "{{get_vpn_basic_data_result.json[0].vlan_user}}"
+    rt: "{{get_vpn_basic_data_result.json[0].rdrt.split(':')[1]}}"
+  when: get_vpn_basic_data_result is succeeded
+
+- name: Get network data from VPN-Doku-DB
+  delegate_to: localhost
+  run_once: true
+  uri:
+    url: "{{vpn_doku_db.base_url}}/api/v0/netzbereich/vpn/name/{{vpn_name}}"
+    method: GET
+    headers: {
+      'Accept': 'application/json'
+    }
+    user: "{{vpn_doku_db.user}}"
+    password: "{{vpn_doku_db.pwd}}"
+    validate_certs: "{{vpn_doku_db.verify_server}}"
+  register: get_vpn_network_data_result
+  failed_when: get_vpn_network_data_result.status != 200
+
+- name: Store VPN network data obtained from VPN-Doku-DB as variable for further usage
+  set_fact:
+    vpn_network_list: "{{get_vpn_network_data_result.json}}"
+  when: get_vpn_network_data_result is succeeded

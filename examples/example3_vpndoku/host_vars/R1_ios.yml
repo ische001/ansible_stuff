@@ -1,0 +1,5 @@
+---
+# Host variables of R1_ios
+#
+ansible_host: 192.168.2.1
+...

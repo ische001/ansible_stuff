@@ -1,0 +1,56 @@
+---
+
+##
+## Example Playbook showing how to use role 'get_VpnDokuDB_info'.
+##
+
+- name: "PLAY 1, get VPN information stored in VPN-Doku-DB"
+  gather_facts: no
+  hosts: localhost
+  any_errors_fatal: true
+  vars_prompt:
+    - name: "vpn_name"
+      prompt: "Enter the name of the VPN"
+      private: no
+
+  tasks:
+    - name: Check entered VPN name
+      set_fact:
+        vpn_name: "{{vpn_name}}"
+      failed_when: "vpn_name == ''"
+
+    - name: Get VPN information from VPN-Doku-DB 
+      include_role:
+        name: get_VpnDokuDB_info
+
+    - name: Show defined host variables
+      debug:
+        var: hostvars['{{inventory_hostname}}']
+        verbosity: 1
+
+- name: "PLAY 2, use obtained VPN information"
+  gather_facts: no
+  hosts: all
+  ignore_unreachable: true
+
+  tasks:
+    - name: Get access to obtained VPN information
+      set_fact:
+        vpn_name: "{{hostvars['localhost'].vpn_name}}"
+        vlan_id: "{{hostvars['localhost'].vlan_id}}"
+        vlan_id_usernet: "{{hostvars['localhost'].vlan_id_usernet}}"
+        rt: "{{hostvars['localhost'].rt}}"
+        vpn_network_list: "{{hostvars['localhost'].vpn_network_list}}"
+      when: inventory_hostname in groups.egtest 
+            or inventory_hostname in groups.iosrouters
+
+    - name: Show basic VPN information
+      debug:
+        msg: "vpn_name = {{vpn_name}}, vlan_id = {{vlan_id}}, vlan_id_usernet = {{vlan_id_usernet}}, rt = {{rt}}"
+        verbosity: 1
+
+    - name: Show VPN network list
+      debug:
+        var: vpn_network_list
+        verbosity: 1
+

@@ -1,0 +1,7 @@
+---
+# Group variables of group iosrouters
+ansible_connection: network_cli
+ansible_network_os: ios
+ansible_user: admin
+ansible_ssh_private_key_file: /home/workshop/.ssh/id_rsa
+...
