@@ -3,6 +3,14 @@
 ##
 ## Example Playbook showing how to use role 'get_VpnDokuDB_info'.
 ##
+## Usage:
+##    ansible-playbook  -i inventory  -v  --vault-id=@prompt  use_role_example1.yml
+## or
+##    ansible-playbook  -i inventory  -v  --vault-id=@pwd_file  use_role_example1.yml
+##    (with pwd_file a file containing the vault password)
+##
+## Option '-v' will show some additional information. It may be ommited.
+##
 
 - name: "Get and use VPN information in one play"
   gather_facts: no
@@ -11,10 +19,10 @@
     - "*2*"
   ignore_unreachable: true
   vars_prompt:
-    - name: "vpn_name"
+    - name: inputVpnName
       prompt: "Enter the name of the VPN"
       private: no
-    - name: "dummy"
+    - name: dummy
       prompt: "Just an example, enter any value"
       private: no
       default: "abcdefghijklmnopqrstuvwxyz"
@@ -27,9 +35,12 @@
     - name: "Get VPN information from VPN-Doku-DB" 
       include_role:
         name: get_VpnDokuDB_info
+      vars:
+        vpn_name: "{{inputVpnName}}"
       any_errors_fatal: true
 
     - name: "Show defined host variables AFTER executing role"
       debug:
         var: hostvars['{{inventory_hostname}}']
 
+...
