@@ -1,0 +1,29 @@
+---
+##
+## Example Playbook using a playbook variable encrypted by vault.
+##
+## Usage:
+##    ansible-playbook --vault-id=@prompt vault_example2.yml
+## or
+##    ansible-playbook --vault-id=@pwd_file vault_example2.yml
+##    (with pwd_file a file containing the vault password)
+##
+
+- name: "Play 1, use vault encrypted variable"
+  gather_facts: no
+  hosts: localhost
+  vars:
+    username: "my_username"
+    the_pwd: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          35666566323435346638656365333332353234396565383232363039323165363063373665656161
+          3765386262666535373130313032333330373036336337370a376165396661383739653763663535
+          65336336643236323230626338393238643336393934333364653762383131646534646462336338
+          3138663864353663630a393437353062343438643633333161613764613662316166373763383765
+          31616638663961353030383334326364633663333439346264666433363534303161
+
+  tasks:
+    - name: "Show values of playbook variables"
+      debug:
+        msg: "username='{{username}}', password='{{the_pwd}}'"
+

@@ -1,0 +1,32 @@
+---
+##
+## Example Playbook using include_vars task wit a vault file
+##
+## Usage:
+##    ansible-playbook --vault-id=@prompt vault_example.yml
+## or
+##    ansible-playbook --vault-id=@pwd_file vault_example.yml
+##    (with pwd_file a file containing the vault password)
+##
+
+- name: "Play 1, include vault file"
+  gather_facts: no
+  hosts: localhost
+
+  tasks:
+    - name: "Show defined host variables BEFORE including vault file my_secrets.yml"
+      debug:
+        var: hostvars['{{inventory_hostname}}']
+
+    - name: "Include variables from vault file my_secrets.yml" 
+      include_vars:
+        file: my_secrets.yml
+
+    - name: "Show defined host variables AFTER including my_secrets.yml"
+      debug:
+        var: hostvars['{{inventory_hostname}}']
+
+    - name: "Show values of included variables"
+      debug:
+        msg: "secret1='{{secret1}}', secret2='{{secret2}}'"
+

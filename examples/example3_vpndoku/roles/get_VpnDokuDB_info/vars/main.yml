@@ -8,18 +8,40 @@
 # available, which means they’re easy to override.
 
 # Information to access VPN-Doku-DB in DB Systel Lab Environment
+# Password encrypted with command
+#   ansible-vault encrypt_string --vault-id=@pwd_file --stdin-name 'vpnd_labServer_pwd'
+vpnd_labServer_pwd: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  64343039343737336433336166323237303361376630643537623339616439303665396565343832
+  6635323933303432363061643833346338303730396530330a663933356133666437356461663165
+  36636233396534373538323835303134653334316232656466646266353465616337396237626238
+  6633393632663763390a316533313563393561323766643764663439383866353662643231616235
+  6539
+
 #"vpn_doku_db": {
 #  "description": "VPN-Doku-DB Lab Server",
 #  "base_url": "https://ffmvsipam1.lanbf.db.de",
 #  "verify_server": False,
 #  "user": "nso_poc",
-#  "pwd": "yiavizzTwZgh"
+#  "pwd": "{{vpnd_labServer_pwd}}"
 #}
+
 # Information to access a mockup VPN-Doku-DB
+# Password encrypted with command
+#   ansible-vault encrypt_string --vault-id=@pwd_file --stdin-name 'vpnd_mockServer_pwd'
+vpnd_mockServer_pwd: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  33643631376633323830353862346464316662623562396633653331376263326334313261346231
+  3930343933353466643361366462313033663261353265390a323064343733613933326134333235
+  37323763306563346363353939313638643432623430633034373237396636353762656537366135
+  3134653737326433620a376539653761666266623739313961386536623864326631356637623733
+  6363
+
 "vpn_doku_db": {
   "description": "Postman Mock VPN-Doku-DB Server",
   "base_url": "https://6f1fcdb5-858d-4e47-8717-1184aaa5c191.mock.pstmn.io",
   "verify_server": True,
   "user": "unknown",
-  "pwd": "unbekannt"
+  "pwd": "{{vpnd_mockServer_pwd}}"
 }
+...

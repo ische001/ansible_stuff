@@ -1,5 +1,5 @@
 # Example inventory file
-# Host- an group variables are defined in separate files
+# Host- and group variables are defined in separate files
 # in directories host_vars and group_vars respectively.
 #
 # Thus this inventory file only defines group membership.

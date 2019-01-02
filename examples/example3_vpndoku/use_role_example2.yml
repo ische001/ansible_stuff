@@ -3,6 +3,12 @@
 ##
 ## Example Playbook showing how to use role 'get_VpnDokuDB_info'.
 ##
+## Usage:
+##    ansible-playbook  -i inventory  -v  --vault-id=@prompt  use_role_example2.yml
+## or
+##    ansible-playbook  -i inventory  -v  --vault-id=@pwd_file  use_role_example2.yml
+##    (with pwd_file a file containing the vault password)
+##
 
 - name: "PLAY 1, get VPN information stored in VPN-Doku-DB"
   gather_facts: no
