@@ -43,3 +43,16 @@ Or show the CDP neighbors:
 --------------------------
 ansible R1_ios -i hosts -m ios_command -a "commands='show cdp neighbors'"
 
+Check out the copy module. Use it to copy a file locally on control node:
+-------------------------------------------------------------------------
+vi abc_file # create a file and fill it with some dummy text
+ansible all -i self_inv -m copy -a 'src=./abc_file dest=/tmp'
+
+Repeat the same command and watch if output changes.
+
+Change contents of ./abc_file and repeat the above command.
+Will the file be copied again?
+
+Change contents of destination file /tmp/abc_file and repeat the above command.
+Will the file be copied again?
+

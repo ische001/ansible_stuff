@@ -1,0 +1,33 @@
+---
+- name: Play 1
+  hosts: localhost
+  gather_facts: no
+  vars:
+    v1: A string on one line
+    v2: |
+       aaa bbb
+       ccc ddd
+    v3: eee fff
+       ggg hhh
+    v4: >-
+       iii jjj
+       kkk lll
+    v5: >
+       mmm nnn
+       ooo ppp
+
+  tasks:
+    - name: Show variable v1
+      debug: var=v1
+
+    - name: Show variable v2
+      debug: var=v2
+
+    - name: Show variable v3
+      debug: var=v3
+
+    - name: Show variable v4
+      debug: var=v4
+
+    - name: Show variable v5
+      debug: var=v5

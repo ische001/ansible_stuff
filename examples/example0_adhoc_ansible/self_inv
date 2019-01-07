@@ -1,0 +1,3 @@
+# Inventory file referencing the local host with a different name
+# A loopback SSH connection will be setup - thus ~/.ssh/authorized_keys has to be maintained
+workshop ansible_host=127.0.0.1
