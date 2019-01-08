@@ -1,0 +1,51 @@
+---
+##
+## Example Playbook using include_vars task
+##
+## Usage:
+## ansible-playbook var_example.yml
+##
+
+- name: "Play 1, using include_vars task"
+  gather_facts: no
+  hosts: localhost
+
+  tasks:
+    - name: "Show defined host variables BEFORE including my_variables.yml"
+      debug:
+        var: hostvars['{{inventory_hostname}}']
+
+    - name: "Include variables from file my_variables.yml" 
+      include_vars:
+        file: my_variables.yml
+
+    - name: "Show defined host variables AFTER including my_variables.yml"
+      debug:
+        var: hostvars['{{inventory_hostname}}']
+
+    - name: "Show values of included variables"
+      debug:
+        msg: "my_var1='{{my_var1}}', my_var2='{{my_var2}}', my_var3='{{my_var3}}'"
+
+
+- name: "Play 2, using include_vars task"
+  gather_facts: no
+  hosts: localhost
+
+  tasks:
+    - name: "Show defined host variables BEFORE including more_vars.yml"
+      debug:
+        var: hostvars['{{inventory_hostname}}']
+
+    - name: "Include variables from file more_vars.yml into set2" 
+      include_vars:
+        file: more_vars.yml
+        name: set2
+
+    - name: "Show defined host variables AFTER including more_vars.yml"
+      debug:
+        var: hostvars['{{inventory_hostname}}']
+
+    - name: "Show values of included variables"
+      debug:
+        msg: "set2.attr1='{{set2.attr1}}', set2.attr2='{{set2.attr2}}', set2.attr3='{{set2.attr3}}'"

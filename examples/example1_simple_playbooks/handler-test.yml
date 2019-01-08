@@ -1,0 +1,24 @@
+---
+# To see task results specify at least '-v' when callig this playbook
+#    ansible-playbook -v handler-test.yml
+- name: Play to check out when handlers are invoked
+  hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: Copy abc_file to tmp directory and trigger notify action
+      copy:
+        src: ./abc_file
+        dest: /tmp
+        mode: 0666
+      notify:
+        - check abc_file
+
+    - name: Any other task following the one which triggerd the notify action
+      debug:
+        msg: "Just a message"
+
+  handlers:
+    - name: check abc_file
+      command: 'ls -l /tmp/abc_file' 
+...

@@ -1,0 +1,5 @@
+---
+my_var1: "Value of my_var1"
+my_var2: 5
+my_var3: "{{my_var1}}"
+...
