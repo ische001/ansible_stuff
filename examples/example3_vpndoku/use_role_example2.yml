@@ -15,19 +15,21 @@
   hosts: localhost
   any_errors_fatal: true
   vars_prompt:
-    - name: "vpn_name"
+    - name: inputVpnName
       prompt: "Enter the name of the VPN"
       private: no
 
   tasks:
     - name: Check entered VPN name
       set_fact:
-        vpn_name: "{{vpn_name}}"
-      failed_when: "vpn_name == ''"
+        vpn_name: "{{inputVpnName}}"
+      failed_when: "inputVpnName == ''"
 
     - name: Get VPN information from VPN-Doku-DB 
       include_role:
         name: get_VpnDokuDB_info
+      vars:
+        vpn_name: "{{inputVpnName}}"
 
     - name: Show defined host variables
       debug:
