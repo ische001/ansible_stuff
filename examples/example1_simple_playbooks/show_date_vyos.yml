@@ -1,22 +1,15 @@
 ---
-## call the playbook like this: ansible-playbook -i hosts show_date.yml
+## To call this playbook:
+##    ansible-playbook -i hosts show_date_vyos.yml
 - name: Show current date and time of managed nodes
-  hosts: R4-vyos
+  hosts: vyosrouters
   gather_facts: no
 
   tasks:
-    - name: Show contents of special variable group_names
-      debug: var=group_names
-
-    - name: Show contents of variable ansible_network_os
-      debug: var=ansible_network_os
-
     - name: Get current dated and time of managed node
       vyos_command:
         commands:
           - 'show date'
-      #when: "'vyos' in group_names"
-      when: "ansible_network_os == 'vyos'"
       register: task_result
 
     - name: Display current date and time on managed node
