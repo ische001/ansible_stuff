@@ -1,11 +1,12 @@
 ---
-## call this playbook like this: ansible-playbook -i hosts show_hostname.yml
+## To call this playbook:
+##    ansible-playbook -i hosts show_hostname_vyos.yml
 - name: Show current hostnames
-  hosts: R4-vyos
+  hosts: vyosrouters
   gather_facts: no
 
   tasks:
-    - name: gather facts from managed nodes
+    - name: gather facts from managed vyos nodes
       vyos_facts:
         gather_subset: all
 

@@ -1,0 +1,15 @@
+---
+## To call this playbook:
+##    ansible-playbook -i hosts show_hostname_ios.yml
+- name: Show current hostnames
+  hosts: iosrouters
+  gather_facts: no
+
+  tasks:
+    - name: gather facts from managed ios nodes
+      ios_facts:
+        gather_subset: all
+
+    - name: Output some of the gathered facts
+      debug:
+        msg: "Managed Node '{{inventory_hostname}}' has hostname '{{ansible_net_hostname}}' and OS-Version '{{ansible_net_version}}'."
