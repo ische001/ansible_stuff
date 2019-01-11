@@ -9,7 +9,7 @@
 
 - name: Issue 'show version' command to Cisco IOS Router and print info
   gather_facts: no
-  hosts: all
+  hosts: iosrouters
   tasks:
 
     - name: send show commands ('show version') to IOS device
