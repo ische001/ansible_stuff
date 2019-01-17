@@ -49,8 +49,6 @@
         vlan_id_usernet: "{{hostvars['localhost'].vlan_id_usernet}}"
         rt: "{{hostvars['localhost'].rt}}"
         vpn_network_list: "{{hostvars['localhost'].vpn_network_list}}"
-      when: inventory_hostname in groups.egtest 
-            or inventory_hostname in groups.iosrouters
 
     - name: Show basic VPN information
       debug:
