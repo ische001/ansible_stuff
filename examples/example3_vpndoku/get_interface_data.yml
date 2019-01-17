@@ -1,0 +1,61 @@
+---
+##
+## Example Playbook analyzing the output of a "show cdp neighbor" command
+## executed on an IOS device.
+##
+## The playbook expects two extra variables to be defined on command line
+## my_invname       inventory name of the device on which the "show cdp neighbor"
+##                  command shall be executed
+## my_nodeType      either "pe" or "ce"
+## partner_hostname hostname of a device connected to the my_invname device
+## partner_nodetype either "ce" or "cr" 
+##
+## Result
+## The play will set the following facts for the my_invname device
+## {{my_nodeType}}_{{partner_nodetype}}_ifType
+##                  Type of interface on my_invname device used for connection
+##                  to partner_hostname device
+##  
+## Usage:
+##    ansible-playbook -i inventory  get_interface_data.yml \
+##                     -e 'my_invname=R1_ios my_nodeType=pe partner_hostname=R2_ios partner_nodetype=ce'
+##
+
+- name: Example, analyze output of 'show cdp neighbor' executed on an IOS device
+  gather_facts: no
+  hosts: "{{my_invname}}"
+  vars:
+    cdpn_out: |
+        Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+                          S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone, 
+                          D - Remote, C - CVTA, M - Two-port Mac Relay 
+
+        Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID
+        R2_ios.devoteam.de
+                         Gig 0/1           150              R B             Gig 0/0
+        R3_ios.devoteam.de
+                         Gig 0/2           141              R B             Gig 0/0
+
+        Total cdp entries displayed : 2
+
+  tasks:
+    - name: Display 'show cdp neighbor' output
+      debug:
+        var: cdpn_out
+
+    - name: Analyze 'show cdp neighbor' output
+      set_fact:
+        neighbor_data: "{{''.join( [partner_hostname, cdpn_out.replace('\n', '@@@').replace('\r', '').replace('@@@ ', ' ').partition(partner_hostname)[2].split('@@@', 1)[0]] ).split()}}"
+
+    - name: Store interface data in facts cache
+      set_fact:
+        "{{my_nodeType}}_{{partner_nodetype}}_ifType": "{{neighbor_data[1]}}"
+        "{{my_nodeType}}_{{partner_nodetype}}_ifName": "{{neighbor_data[2]}}"
+        "{{partner_nodetype}}_{{my_nodeType}}_ifType": "{{neighbor_data[6]}}"
+        "{{partner_nodetype}}_{{my_nodeType}}_ifName": "{{neighbor_data[7]}}"
+
+    - name: Show defined host variables
+      debug:
+        var: hostvars['{{inventory_hostname}}']
+        verbosity: 1
+...
